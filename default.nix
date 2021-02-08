@@ -183,7 +183,9 @@ let
     });
 
   overlayByType = {
-    lambda = bionix: overlay: bionix.extend overlay;
+    lambda = bionix: overlay:
+      bionix.extend
+      (self: super: nixpkgs.lib.recursiveUpdate super (overlay self super));
     path = bionix: path: overlay bionix (import path);
   };
   overlay = bionix: overlay:
