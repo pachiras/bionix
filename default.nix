@@ -52,7 +52,7 @@ let
 
       slurm-run = callPackage ./lib/slurm.nix { };
       slurm-exec = f: x: y:
-        slurm-run x (exec f (builtins.removeAttrs x [
+        slurm-run x (f (builtins.removeAttrs x [
           "ppn"
           "mem"
           "walltime"
