@@ -50,12 +50,18 @@ let
       whisper = callBionix ./tools/whisper.nix { };
       star = callBionix ./tools/star.nix { };
 
-      slurm = callPackage ./lib/slurm.nix { };
-        /*exec = f: x: y:
-          slurm x
-          (super.exec f (builtins.removeAttrs x [ "ppn" "mem" "walltime" "partition" "slurmFlags" "salloc" "srun" ])
-            y);
-      };*/
+      slurm-run = callPackage ./lib/slurm.nix { };
+      slurm-exec = f: x: y:
+        slurm-run x (exec f (builtins.removeAttrs x [
+          "ppn"
+          "mem"
+          "walltime"
+          "partition"
+          "slurmFlags"
+          "salloc"
+          "srun"
+        ]) y);
+      slurm = bionix.extend (self: super: { exec = super.slurm-run; });
       qsub = attrs:
         bionix.extend (self: super:
           with self; rec {
